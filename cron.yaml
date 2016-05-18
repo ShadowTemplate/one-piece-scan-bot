@@ -1,0 +1,4 @@
+cron:
+- description: release check
+  url: /release
+  schedule: every 1 minutes
