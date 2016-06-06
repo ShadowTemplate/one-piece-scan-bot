@@ -1,2 +1,2 @@
-# ONE-Piece-Scan-Bot
-ONE Piece Scan Bot for Telegram
+# ONE-PIECE-Scan-Bot
+ONE PIECE Scan Bot for Telegram
