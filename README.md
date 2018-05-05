@@ -18,7 +18,7 @@ http://juinjutsuteam.forumcommunity.net/). It is designed to be deployed on
 
 **Authors**: [ShadowTemplate](https://github.com/ShadowTemplate)
 
-**Notes**: *For personal use.* [optional]
+**Notes**: *For personal use.*
 
 ---
 ## Getting Started
@@ -28,8 +28,8 @@ Engine project and reuse it. Please create a *secrets.py* file and set these
 two values:
 
 ```
-op_bot_token = "telegram_bot_token"
-telegram_chat_id = "telegram_chat_id"
+op_bot_token = "your_telegram_bot_token"
+telegram_chat_id = "your_telegram_chat_id"
 ```
 
 ### Prerequisites
@@ -37,15 +37,15 @@ telegram_chat_id = "telegram_chat_id"
 Clone the repository and install the required Python dependencies:
 
 ```
-$ git clone https://github.com/ShadowTemplate/ONE-PIECE-scan-bot.git
-$ cd ONE-PIECE-scan-bot
+$ git clone https://github.com/ShadowTemplate/one-piece-scan-bot.git
+$ cd one-piece-scan-bot
 $ pip install --user -r requirements.txt
 ```
 
 ### Deployment
 
 This repository includes the required Google App Engine libraries. The project 
-is ready to be deployed.
+is thus ready to be deployed.
 
 
 ---
