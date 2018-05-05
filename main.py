@@ -12,7 +12,8 @@ class ReleaseHandler(webapp2.RequestHandler):
     def get(self):
         start_time = timer()
         one_piece_bot.check_releases()
-        self.response.write("Request completed in " + str((timer() - start_time)) + " seconds.")
+        self.response.write("Request completed in " + str(
+            (timer() - start_time)) + " seconds.")
 
 
 app = webapp2.WSGIApplication([
