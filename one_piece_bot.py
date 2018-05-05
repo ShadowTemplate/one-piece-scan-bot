@@ -23,8 +23,9 @@ def check_releases():
         try:
             for release in filter(lambda x: is_monitored(x), team.fetch_f()):
                 send_notification_if_needed(team, release)
-        except Exception:
+        except Exception as e:
             log.warning("Unable to fetch releases from " + team.name + ". Going to skip it.")
+            log.warning(e.message)
 
 
 def send_notification_if_needed(team, release):
