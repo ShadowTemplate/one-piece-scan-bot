@@ -38,7 +38,7 @@ Clone the repository and install the required Python dependencies:
 
 ```
 $ git clone https://github.com/ShadowTemplate/one-piece-scan-bot.git
-$ cd one-piece-scan-bot
+$ cd one-piece-scan-bot/
 $ pip install --user -r requirements.txt
 ```
 
