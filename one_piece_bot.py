@@ -1,4 +1,4 @@
-from extractors import teams
+from extractors import teams, artur
 from google.appengine.api import namespace_manager
 
 import google.appengine.ext.ndb as ndb
@@ -20,15 +20,30 @@ def check_releases():
     for team in teams:
         log.info("Fetching releases from " + team.name + "...")
         try:
-            for release in filter(lambda x: is_monitored(x), team.fetch_f()):
-                send_notification_if_needed(team, release)
+            releases, messages = team.fetch_f()
+            for num, rel in enumerate(releases):
+                if is_monitored(rel):
+                    send_notification_if_needed(team, messages[num])
         except Exception as e:
             log.warning("Unable to fetch releases from " + team.name +
                         ". Going to skip it.")
             log.warning(e.message)
 
 
-def send_notification_if_needed(team, release):
+def check_artur():
+    log.info("Checking The Library of Ohara at " + str(time.strftime("%c")))
+    log.info("Fetching releases from " + artur.name + "...")
+    try:
+        releases, messages = artur.fetch_f()
+        for num, rel in enumerate(releases):
+            send_notification_if_needed(artur, messages[num], artur=True)
+    except Exception as e:
+        log.warning("Unable to fetch releases from " + artur.name +
+                    ". Going to skip it.")
+        log.warning(e.message)
+
+
+def send_notification_if_needed(team, release, artur=False):
     previous_namespace = namespace_manager.get_namespace()
     try:
         namespace_manager.set_namespace(team.db_namespace)
@@ -36,10 +51,13 @@ def send_notification_if_needed(team, release):
         if not item:
             try:
                 op_bot = telegram.Bot(token=secrets.op_bot_token)
-                message = "Hey, pirati! Nuovo capitolo disponibile!\n" + \
-                          team.name + ": " + release + "\n\nBuona lettura!"
-                op_bot.sendMessage(chat_id=secrets.telegram_chat_id,
-                                   text=message)
+                if artur:
+                    message = "Hey, pirati! Nuova analisi disponibile!"
+                else:
+                    message = "Hey, pirati! Nuovo capitolo disponibile!"
+                message += "\n\n" + team.name + ": " + release + "\n\nBuona lettura!"
+                op_bot.sendMessage(chat_id=secrets.telegram_chat_id, text=message,
+                                   disable_web_page_preview=True)
                 Release(id=release, name=release).put()
             except Exception as e:
                 log.warning("Unable to send Telegram notification.")

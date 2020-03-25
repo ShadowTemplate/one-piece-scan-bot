@@ -12,6 +12,7 @@ class ReleaseHandler(webapp2.RequestHandler):
     def get(self):
         start_time = timer()
         one_piece_bot.check_releases()
+        one_piece_bot.check_artur()
         self.response.write("Request completed in " + str(
             (timer() - start_time)) + " seconds.")
 
