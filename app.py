@@ -23,8 +23,8 @@ def main_get():
 @app.route('/release', methods=['GET'])
 def _dummy_get():
     start_time = timer()
-    check_releases()
-    check_artur()
+    # check_releases()
+    # check_artur()
     msg = f"GET request completed in {str((timer() - start_time))} seconds."
     log.info(msg)
     return msg
