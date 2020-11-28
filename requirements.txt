@@ -1,3 +1,8 @@
+# one-piece-scan-bot
 pyquery==1.2.13
 python-telegram-bot==8.1.1
 urlfetch==1.1.3
+
+# heroku-flask
+gunicorn==20.0.4
+flask==1.1.2

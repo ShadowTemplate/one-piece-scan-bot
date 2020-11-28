@@ -1,3 +1,4 @@
-secrets.py
+one_piece_scan_bot/secrets.py
 venv/
 .idea/
+*.pyc

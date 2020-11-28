@@ -1,10 +1,12 @@
 # ONE PIECE Scan Bot
 
-A Telegram bot to receive notifications when new ONE PIECE chapters are 
-available. This bot periodically checks if new Italian chapters are released on 
-[MangaEden](https://www.mangaeden.com/it/) and [Juin Jutsu Team Forum](
-http://juinjutsuteam.forumcommunity.net/). It is designed to be deployed on 
-[Google App Engine](https://cloud.google.com/appengine/).
+A Telegram bot to receive notifications when new ONE PIECE weekly contents are available.
+This bot periodically checks if new Italian/English chapters are released on
+[MangaEden](https://www.mangaeden.com/it/),
+[Juin Jutsu Team Forum](http://juinjutsuteam.forumcommunity.net/) and 
+[MangaPlus (Shueisha)](https://mangaplus.shueisha.co.jp/).
+In addition, it also checks for new Arthur's analyses in [The Library of Ohara](https://thelibraryofohara.com/).
+It is designed to be deployed on [Heroku](https://heroku.com/).
 
 
 ---
@@ -23,8 +25,7 @@ http://juinjutsuteam.forumcommunity.net/). It is designed to be deployed on
 ---
 ## Getting Started
 
-This bot is for personal use only, but you can create your own Google App 
-Engine project and reuse it. Please create a *secrets.py* file and set these 
+This bot is for personal use only, but you can create your own Heroku project and reuse it. Please create a *secrets.py* file and set these 
 two values:
 
 ```
@@ -44,7 +45,7 @@ $ pip install --user -r requirements.txt
 
 ### Deployment
 
-This repository includes the required Google App Engine libraries. The project 
+This repository includes the required Heroku configuration files. The project 
 is thus ready to be deployed.
 
 
@@ -53,7 +54,7 @@ is thus ready to be deployed.
 
 * [Python 2.7](https://www.python.org/downloads/release/python-270/) - 
 Programming language
-* [Google App Engine](https://cloud.google.com/appengine/) - Web framework
+* [Heroku](https://heroku.com/) - Web framework
 * [python-telegram-bot](https://python-telegram-bot.org/) - Telegram API 
 wrapper 
 * [pyquery](http://pyquery.readthedocs.io/en/latest/) - HTML parsing
