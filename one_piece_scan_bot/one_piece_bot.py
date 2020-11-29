@@ -58,6 +58,7 @@ class ContentChecker:
                         message = "Hey, pirati! Nuovo capitolo disponibile!"
                     message += f"\n\n{team.name}: {release_message}\n\nBuona lettura!"
                     print(message)
+                    print(telegram_chat_id)
                     op_bot.sendMessage(chat_id=telegram_chat_id, text=message, disable_web_page_preview=True)
                     self.drive_service.create_file(release_code, DRIVE_DOCS_MIME_TYPE, parent_dir_id=namespace)
                 except Exception as exc:
