@@ -30,6 +30,7 @@ def jjt_fetch():
         chapter_numbers = [re.findall("(\d+)", r)[0] for r in releases]
         releases = [f"One Piece {ch} (ITA)" for ch in chapter_numbers]
         messages = [f"{r}\n{reader_url.format(ch_num)}" for r, ch_num in zip(releases, chapter_numbers)]
+        log.info(releases)
         return releases, messages
     except Exception as exc:
         log.warning("Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
@@ -41,8 +42,8 @@ def mangaeden_fetch():
     url = "https://www.mangaeden.com/it/it-manga/one-piece/"
     headers = {
         "User-Agent":
-            "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like "
-            "Gecko) Chrome/24.0.1312.27 Safari/537.17"}
+            "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17"
+    }
     try:
         request = urlfetch.fetch(url, headers=headers)
         parser = PyQuery(request.content)
@@ -75,12 +76,10 @@ def shueisha_fetch():
         clean_text = ''.join(chr(ch) for ch in raw_text if chr(ch) in string.printable)
         releases = re.findall("@R=#(\d+)", clean_text)  # will return only the last 3
         chapter_ids = re.findall("chapter/(\d+)/chapter_thumbnail", clean_text)[3:]
-        log.info(releases)
         reader_url = "https://mangaplus.shueisha.co.jp/viewer/{}"
         releases = ["One Piece " + r + " (ENG)" for r in releases]
         messages = [r + "\n" + reader_url.format(ch_id) for r, ch_id in zip(releases, chapter_ids)]
         log.info(releases)
-        log.info(messages)
         return releases, messages
     except Exception as exc:
         log.warning("Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
