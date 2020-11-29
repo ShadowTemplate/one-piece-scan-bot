@@ -5,7 +5,7 @@ This bot periodically checks if new Italian/English chapters are released on
 [MangaEden](https://www.mangaeden.com/it/),
 [Juin Jutsu Team Forum](http://juinjutsuteam.forumcommunity.net/) and 
 [MangaPlus (Shueisha)](https://mangaplus.shueisha.co.jp/).
-In addition, it also checks for new Arthur's analyses in [The Library of Ohara](https://thelibraryofohara.com/).
+In addition, it also checks for new Artur's analyses in [The Library of Ohara](https://thelibraryofohara.com/).
 It is designed to be deployed on [Heroku](https://heroku.com/).
 
 

@@ -1,4 +1,5 @@
 one_piece_scan_bot/secrets.py
+one_piece_scan_bot/tester.py
 venv/
 .idea/
 *.pyc

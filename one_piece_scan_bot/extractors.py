@@ -20,23 +20,21 @@ def jjt_fetch():
     url = "https://jjtutility.herokuapp.com/tabReleases"
     headers = {
         "User-Agent":
-            "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like "
-            "Gecko) Chrome/24.0.1312.27 Safari/537.17"}
+            "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17"
+    }
     try:
         request = urlfetch.fetch(url, headers=headers)
         parser = PyQuery(request.content)
         releases = [r.attrib.get("title") for r in parser("a") if "One Piece" in r.attrib.get("title")]
         reader_url = "https://www.juinjutsureader.ovh/read/one-piece/it/0/{}/"
         chapter_numbers = [re.findall("(\d+)", r)[0] for r in releases]
-        releases = ["One Piece " + ch + " (ITA)" for ch in chapter_numbers]
-        messages = [r + "\n" + reader_url.format(ch_num) for r, ch_num in zip(releases, chapter_numbers)]
+        releases = [f"One Piece {ch} (ITA)" for ch in chapter_numbers]
+        messages = [f"{r}\n{reader_url.format(ch_num)}" for r, ch_num in zip(releases, chapter_numbers)]
         return releases, messages
-    except Exception as e:
-        log.warning(
-            "Unable to fetch data.\nPlease check your Internet connection and "
-            "the availability of the site.")
-        log.warning(e.message)
-        raise e
+    except Exception as exc:
+        log.warning("Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
+        log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
+        raise exc
 
 
 def mangaeden_fetch():
@@ -53,15 +51,14 @@ def mangaeden_fetch():
         for item in parser('.chapterLink'):
             chap_url = item.attrib['href']
             chapter_num = re.findall("(\d+)", chap_url)[0]
-            releases.append("One Piece " + chapter_num + " (ITA)")
+            releases.append(f"One Piece {chapter_num} (ITA)")
             messages.append(releases[-1] + "\n" + base_url.format(chap_url))
         log.info(releases)
         return releases, messages
-    except Exception as e:
-        log.warning("Unable to fetch data.\nPlease check your Internet "
-                    "connection and the availability of the site.")
-        log.warning(e.message)
-        raise e
+    except Exception as exc:
+        log.warning("Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
+        log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
+        raise exc
 
 
 def shueisha_fetch():
@@ -85,11 +82,10 @@ def shueisha_fetch():
         log.info(releases)
         log.info(messages)
         return releases, messages
-    except Exception as e:
-        log.warning("Unable to fetch data.\nPlease check your Internet "
-                    "connection and the availability of the site.")
-        log.warning(e.message)
-        raise e
+    except Exception as exc:
+        log.warning("Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
+        log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
+        raise exc
 
 
 def artur_fetch():
@@ -111,11 +107,10 @@ def artur_fetch():
             messages.append(releases[-1] + "\n" + article_url)
         log.info(releases)
         return releases, messages
-    except Exception as e:
-        log.warning("Unable to fetch data.\nPlease check your Internet "
-                    "connection and the availability of the site.")
-        log.warning(e.message)
-        raise e
+    except Exception as exc:
+        log.warning("Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
+        log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
+        raise exc
 
 
 jjt_team = Team("Juin Jutsu Team", jjt_fetch, "JJT")
