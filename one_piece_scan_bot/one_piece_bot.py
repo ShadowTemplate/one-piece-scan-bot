@@ -1,8 +1,8 @@
 import telegram
 import time
 
-from one_piece_scan_bot.constants import DRIVE_BOT_DIR_ID, DRIVE_DIR_MIME_TYPE, DRIVE_DOCS_MIME_TYPE
-from one_piece_scan_bot.drive_service import DriveService
+from one_piece_scan_bot.constants import DROPBOX_BOT_DIR_PATH
+from one_piece_scan_bot.dropbox_service import DropboxService
 from one_piece_scan_bot.extractors import teams, artur
 from one_piece_scan_bot.logger import get_application_logger
 from one_piece_scan_bot.credentials import op_bot_token, telegram_chat_id
@@ -14,13 +14,8 @@ releases_to_check = ['One Piece']
 class ContentChecker:
 
     def __init__(self):
-        self.drive_service = DriveService()
-        bot_dirs = self.drive_service.list_files(
-            parent_dir_id=DRIVE_BOT_DIR_ID,
-            mime_type=DRIVE_DIR_MIME_TYPE,
-        )
-        self.namespace = {f"{item['name']}": f"{item['id']}" for item in bot_dirs}
-        self.namespace_items = {}
+        self.storage_service = DropboxService()
+        self.team_items = {}
 
     def check_releases(self):
         log.info(f"Checking releases at {str(time.strftime('%c'))}")
@@ -47,33 +42,30 @@ class ContentChecker:
             log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
 
     def send_notification_if_needed(self, team, release_code, release_message, artur_flag=False):
-        namespace = self.namespace[team.db_namespace]
+        file_dir = f"{DROPBOX_BOT_DIR_PATH}/{team.name}"
         try:
-            if not self._is_old_content(namespace, release_code):
-                try:
-                    op_bot = telegram.Bot(token=op_bot_token)
-                    if artur_flag:
-                        message = "Hey, pirati! Nuova analisi disponibile!"
-                    else:
-                        message = "Hey, pirati! Nuovo capitolo disponibile!"
-                    message += f"\n\n{team.name}: {release_message}\n\nBuona lettura!"
-                    self.drive_service.create_file(release_code, DRIVE_DOCS_MIME_TYPE, parent_dir_id=namespace)
-                    op_bot.sendMessage(chat_id=telegram_chat_id, text=message, disable_web_page_preview=True)
-                except Exception as exc:
-                    log.warning("Unable to send Telegram notification.")
-                    log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
+            if self._is_old_content(file_dir, release_code):
+                return
+            try:
+                op_bot = telegram.Bot(token=op_bot_token)
+                if artur_flag:
+                    message = "Hey, pirati! Nuova analisi disponibile!"
+                else:
+                    message = "Hey, pirati! Nuovo capitolo disponibile!"
+                message += f"\n\n{team.name}: {release_message}\n\nBuona lettura!"
+                self.storage_service.create_file(f"{file_dir}/{release_code}")
+                op_bot.sendMessage(chat_id=telegram_chat_id, text=message, disable_web_page_preview=True)
+            except Exception as exc:
+                log.warning("Unable to send Telegram notification.")
+                log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
         except Exception as exc:
-            log.warning("Unable to store data on Drive.")
+            log.warning("Unable to store data.")
             log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
 
-    def _is_old_content(self, namespace, release_code):
-        if namespace not in self.namespace_items:
-            namespace_items = self.drive_service.list_files(
-                parent_dir_id=namespace,
-                mime_type=DRIVE_DOCS_MIME_TYPE,
-            )
-            self.namespace_items[namespace] = namespace_items
-        return any(item['name'] == release_code for item in self.namespace_items[namespace])
+    def _is_old_content(self, file_dir, file_name):
+        if file_dir not in self.team_items:
+            self.team_items[file_dir] = self.storage_service.list_files(file_dir)
+        return any(item.name == file_name for item in self.team_items[file_dir])
 
 
 def get_status():
