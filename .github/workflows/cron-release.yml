@@ -1,0 +1,11 @@
+name: Check releases every 10 minutes
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+jobs:
+  check-releases:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
+      - run: curl https://one-piece-scan-bot.herokuapp.com/release
+      - run: echo "🍏 This job's status is ${{ job.status }}."
