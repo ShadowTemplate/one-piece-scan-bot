@@ -41,26 +41,25 @@ def jjt_fetch():
 
 
 def mangaeden_fetch():
-    url = "https://www.mangaeden.com/it/it-manga/one-piece/"
-    log.info("Building selenium")
-    log.info(os.environ)
-    GOOGLE_CHROME_BIN = os.environ.get('GOOGLE_CHROME_BIN')
-    # CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH')
-    CHROMEDRIVER_PATH = "/app/.chromedriver/bin"
-    log.info(f"GOOGLE_CHROME_BIN: {GOOGLE_CHROME_BIN}")
-    log.info(f"CHROMEDRIVER_PATH: {CHROMEDRIVER_PATH}")
-    chrome_options = webdriver.ChromeOptions()
-    chrome_options.add_argument('--disable-gpu')
-    chrome_options.add_argument('--no-sandbox')
-    chrome_options.binary_location = GOOGLE_CHROME_BIN
-    driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
-    log.info("Driver built")
-    driver.get(url)
-    log.info(driver.page_source)
-    log.info("Building parser!")
-    parser = PyQuery(driver.page_source.content)
-    log.info(f".chapterLink: {len(parser('.chapterLink'))}")
-    driver.quit()
+    # url = "https://www.mangaeden.com/it/it-manga/one-piece/"
+    # log.info("Building selenium")
+    # log.info(os.environ)
+    # GOOGLE_CHROME_BIN = os.environ.get('GOOGLE_CHROME_BIN')
+    # CHROMEDRIVER_PATH = "/app/.chromedriver/bin"
+    # log.info(f"GOOGLE_CHROME_BIN: {GOOGLE_CHROME_BIN}")
+    # log.info(f"CHROMEDRIVER_PATH: {CHROMEDRIVER_PATH}")
+    # chrome_options = webdriver.ChromeOptions()
+    # chrome_options.add_argument('--disable-gpu')
+    # chrome_options.add_argument('--no-sandbox')
+    # chrome_options.binary_location = GOOGLE_CHROME_BIN
+    # driver = webdriver.Chrome(executable_path=CHROMEDRIVER_PATH, chrome_options=chrome_options)
+    # log.info("Driver built")
+    # driver.get(url)
+    # log.info(driver.page_source)
+    # log.info("Building parser!")
+    # parser = PyQuery(driver.page_source.content)
+    # log.info(f".chapterLink: {len(parser('.chapterLink'))}")
+    # driver.quit()
     return
 
     headers = {
