@@ -42,7 +42,7 @@ def mangaeden_fetch():
     url = "https://www.mangaeden.com/it/it-manga/one-piece/"
     headers = {
         "User-Agent":
-            "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17"
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36"
     }
     try:
         request = urlfetch.fetch(url, headers=headers)
