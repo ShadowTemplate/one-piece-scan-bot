@@ -45,7 +45,8 @@ def mangaeden_fetch():
     log.info("Building selenium")
     log.info(os.environ)
     GOOGLE_CHROME_BIN = os.environ.get('GOOGLE_CHROME_BIN')
-    CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH')
+    # CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH')
+    CHROMEDRIVER_PATH = "/app/.chromedriver/bin"
     log.info(f"GOOGLE_CHROME_BIN: {GOOGLE_CHROME_BIN}")
     log.info(f"CHROMEDRIVER_PATH: {CHROMEDRIVER_PATH}")
     chrome_options = webdriver.ChromeOptions()
