@@ -43,6 +43,7 @@ def jjt_fetch():
 def mangaeden_fetch():
     url = "https://www.mangaeden.com/it/it-manga/one-piece/"
     log.info("Building selenium")
+    log.info(os.environ)
     GOOGLE_CHROME_BIN = os.environ.get('GOOGLE_CHROME_BIN')
     CHROMEDRIVER_PATH = os.environ.get('CHROMEDRIVER_PATH')
     log.info(f"GOOGLE_CHROME_BIN: {GOOGLE_CHROME_BIN}")
