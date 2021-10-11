@@ -48,7 +48,9 @@ def mangaeden_fetch():
         request = urlfetch.fetch(url, headers=headers)
         parser = PyQuery(request.content)
         releases, messages = [], []
+        log.info(f"RAW TEXT:\n{parser.text()}")
         base_url = 'https://www.mangaeden.com{}'
+        log.info(f".chapterLink: {len(parser('.chapterLink'))}")
         for item in parser('.chapterLink'):
             chap_url = item.attrib['href']
             chapter_num = re.findall("(\d+)", chap_url)[0]
