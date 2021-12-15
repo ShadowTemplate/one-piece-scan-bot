@@ -1,6 +1,6 @@
 import urlfetch
 from pyquery import PyQuery
-from selenium import webdriver
+# from selenium import webdriver
 
 import os
 import re
@@ -86,6 +86,34 @@ def mangaeden_fetch():
         raise exc
 
 
+def lupi_fetch():
+    url = "https://lupiteam.net/reader/series/one-piece/"
+    headers = {
+        "User-Agent":
+            "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0"
+    }
+    try:
+        request = urlfetch.fetch(url, headers=headers)
+        parser = PyQuery(request.content)
+        releases, messages = [], []
+        base_url = 'https://lupiteam.net/reader/read/one-piece/it/0/'
+        for item in parser('a'):
+            url = item.attrib['href']
+            if not url.startswith(base_url):
+                continue
+            chapter_num = re.findall("(\d+)", url[len(base_url):])[0]
+            releases.append(f"One Piece {chapter_num} (ITA)")
+            messages.append(releases[-1] + "\n" + f"{base_url}{chapter_num}/page/1")
+        log.info(releases)
+        return releases, messages
+    except Exception as exc:
+        log.warning(
+            "Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
+        log.warning(
+            f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
+        raise exc
+
+
 def shueisha_fetch():
     # OP ENG has id 100020
     # web page: https://mangaplus.shueisha.co.jp/titles/100020
@@ -138,7 +166,13 @@ def artur_fetch():
 
 jjt_team = Team("Juin Jutsu Team", jjt_fetch, "JJT")
 mangaeden = Team("Mangaeden", mangaeden_fetch, "Mangaeden")
+lupi = Team("Lupi Team", lupi_fetch, "Lupi Team")
 shueisha = Team("Shueisha", shueisha_fetch, "Shueisha")
 artur = Team("Artur", artur_fetch, "Artur")
 
-teams = [jjt_team, mangaeden, shueisha]
+teams = [
+    jjt_team,
+    lupi,
+    # mangaeden,
+    shueisha,
+]
