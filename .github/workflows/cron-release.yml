@@ -1,7 +1,7 @@
-name: Check releases every 10 minutes
+name: Check releases every 60 minutes
 on:
   schedule:
-    - cron: "*/10 * * * *"
+    - cron: "0 * * * *"
 jobs:
   check-releases:
     runs-on: ubuntu-latest

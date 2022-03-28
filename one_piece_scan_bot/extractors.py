@@ -87,7 +87,7 @@ def mangaeden_fetch():
 
 
 def lupi_fetch():
-    url = "https://lupiteam.net/reader/series/one-piece/"
+    url = "https://lupiteam.net/comics/one-piece"
     headers = {
         "User-Agent":
             "Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:95.0) Gecko/20100101 Firefox/95.0"
@@ -96,7 +96,7 @@ def lupi_fetch():
         request = urlfetch.fetch(url, headers=headers)
         parser = PyQuery(request.content)
         releases, messages = [], []
-        base_url = 'https://lupiteam.net/reader/read/one-piece/it/0/'
+        base_url = '/read/one-piece/it/vol/'
         for item in parser('a'):
             url = item.attrib['href']
             if not url.startswith(base_url):
@@ -172,7 +172,7 @@ artur = Team("Artur", artur_fetch, "Artur")
 
 teams = [
     jjt_team,
-    lupi,
+    # lupi,
     # mangaeden,
     shueisha,
 ]
