@@ -5,7 +5,23 @@ on:
 jobs:
   check-releases:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: [3.9]
     steps:
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: curl https://one-piece-scan-bot.herokuapp.com/release
-      - run: echo "🍏 This job's status is ${{ job.status }}."
+    - name: Clone repository
+      uses: actions/checkout@v2
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v2
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install one_piece_scan_bot dependencies
+      run: |
+        echo "The job was automatically triggered by a ${{ github.event_name }} event."
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install -r requirements.txt
+    - name: Run checker
+      run: |
+        python one_piece_scan_bot/main.py
+        echo "This job's status is ${{ job.status }}."
