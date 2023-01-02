@@ -16,10 +16,10 @@ def get_credential(credential_key):
     return os.environ.get(credential_key, _get_credential_from_secrets(credential_key))
 
 
-op_bot_token = get_credential('op_bot_token')
-personal_id = get_credential('personal_id')
-group_id = get_credential('group_id')
-telegram_chat_id = group_id
-dropbox_access_token = get_credential('dropbox_access_token')
-dropbox_app_key = get_credential('dropbox_app_key')
-dropbox_app_secret = get_credential('dropbox_app_secret')
+OP_BOT_TOKEN = get_credential('OP_BOT_TOKEN')
+PERSONAL_ID = get_credential('PERSONAL_ID')
+GROUP_ID = get_credential('GROUP_ID')
+TELEGRAM_CHAT_ID = GROUP_ID
+DROPBOX_ACCESS_TOKEN = get_credential('DROPBOX_ACCESS_TOKEN')
+DROPBOX_APP_KEY = get_credential('DROPBOX_APP_KEY')
+DROPBOX_APP_SECRET = get_credential('DROPBOX_APP_SECRET')

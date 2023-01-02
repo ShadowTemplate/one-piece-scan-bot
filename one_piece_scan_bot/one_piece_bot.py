@@ -5,7 +5,7 @@ from one_piece_scan_bot.constants import DROPBOX_BOT_DIR_PATH
 from one_piece_scan_bot.dropbox_service import DropboxService
 from one_piece_scan_bot.extractors import teams, artur
 from one_piece_scan_bot.logger import get_application_logger
-from one_piece_scan_bot.credentials import op_bot_token, telegram_chat_id
+from one_piece_scan_bot.credentials import OP_BOT_TOKEN, TELEGRAM_CHAT_ID
 
 log = get_application_logger()
 releases_to_check = ['One Piece']
@@ -47,14 +47,14 @@ class ContentChecker:
             if self._is_old_content(file_dir, release_code):
                 return
             try:
-                op_bot = telegram.Bot(token=op_bot_token)
+                op_bot = telegram.Bot(token=OP_BOT_TOKEN)
                 if artur_flag:
                     message = "Hey, pirati! Nuova analisi disponibile!"
                 else:
                     message = "Hey, pirati! Nuovo capitolo disponibile!"
                 message += f"\n\n{team.name}: {release_message}\n\nBuona lettura!"
                 self.storage_service.create_file(f"{file_dir}/{release_code}")
-                op_bot.sendMessage(chat_id=telegram_chat_id, text=message, disable_web_page_preview=True)
+                op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
             except Exception as exc:
                 log.warning("Unable to send Telegram notification.")
                 log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")

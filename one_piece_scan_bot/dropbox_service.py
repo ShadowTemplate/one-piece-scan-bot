@@ -1,5 +1,5 @@
 from dropbox import Dropbox
-from one_piece_scan_bot.credentials import dropbox_access_token, dropbox_app_key, dropbox_app_secret
+from one_piece_scan_bot.credentials import DROPBOX_ACCESS_TOKEN, DROPBOX_APP_KEY, DROPBOX_APP_SECRET
 from one_piece_scan_bot.logger import get_application_logger
 
 log = get_application_logger()
@@ -9,9 +9,9 @@ class DropboxService:
 
     def __init__(self):
         self._service = Dropbox(
-            oauth2_access_token=dropbox_access_token,
-            app_key=dropbox_app_key,
-            app_secret=dropbox_app_secret,
+            oauth2_access_token=DROPBOX_ACCESS_TOKEN,
+            app_key=DROPBOX_APP_KEY,
+            app_secret=DROPBOX_APP_SECRET,
         )
 
     @property
