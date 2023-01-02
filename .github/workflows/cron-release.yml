@@ -23,5 +23,7 @@ jobs:
         python -m pip install -r requirements.txt
     - name: Run checker
       run: |
-        python one_piece_scan_bot/main.py
+        pwd
+        ls
+        PYTHONPATH=$PYTHONPATH:$(pwd) python one_piece_scan_bot/main.py
         echo "This job's status is ${{ job.status }}."
