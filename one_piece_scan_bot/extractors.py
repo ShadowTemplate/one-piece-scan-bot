@@ -19,7 +19,7 @@ class Team:
 
 
 def jjt_fetch():
-    url = "https://jjtutility.altervista.org/tabReleases.php"
+    url = "https://jjt-utility.onrender.com/release/tab"
     headers = {
         "User-Agent":
             "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like Gecko) Chrome/24.0.1312.27 Safari/537.17"
