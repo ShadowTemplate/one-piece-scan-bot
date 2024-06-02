@@ -127,7 +127,7 @@ def shueisha_fetch():
         raw_text = request.content
         clean_text = ''.join(chr(ch) for ch in raw_text if chr(ch) in string.printable)
         releases = re.findall("#(\d+)", clean_text)[-3:]
-        chapter_ids = re.findall("chapter/(\d+)/chapter_thumbnail", clean_text)[3:]
+        chapter_ids = re.findall("chapter/(\d+)/chapter_thumbnail", clean_text)[-3:]
         reader_url = "https://mangaplus.shueisha.co.jp/viewer/{}"
         releases = ["One Piece " + r + " (ENG)" for r in releases]
         messages = [r + "\n" + reader_url.format(ch_id) for r, ch_id in zip(releases, chapter_ids)]
