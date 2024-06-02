@@ -117,7 +117,7 @@ def lupi_fetch():
 def shueisha_fetch():
     # OP ENG has id 100020
     # web page: https://mangaplus.shueisha.co.jp/titles/100020
-    url = "https://jumpg-webapi.tokyo-cdn.com/api/title_detail?title_id=100020"
+    url = "https://jumpg-webapi.tokyo-cdn.com/api/title_detailV3?title_id=100020"
     headers = {
         "User-Agent":
             "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like "
