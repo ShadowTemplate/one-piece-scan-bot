@@ -171,7 +171,7 @@ shueisha = Team("Shueisha", shueisha_fetch, "Shueisha")
 artur = Team("Artur", artur_fetch, "Artur")
 
 teams = [
-    jjt_team,
+    # jjt_team,
     # lupi,
     # mangaeden,
     shueisha,
