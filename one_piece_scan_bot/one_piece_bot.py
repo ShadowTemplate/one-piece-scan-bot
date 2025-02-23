@@ -25,9 +25,10 @@ class ContentChecker:
                 fetched_content = team.fetch_f()
                 releases = fetched_content['releases']
                 messages = fetched_content['messages']
-                for release, message in zip(releases, messages):
+                urls = fetched_content.get('urls', None)
+                for release, message, url in zip(releases, messages, urls):
                     if is_monitored(message):
-                        self.send_notification_if_needed(team, release, message)
+                        self.send_notification_if_needed(team, release, message, url)
             except Exception as exc:
                 log.warning(f"Unable to fetch releases from {team.name}. Going to skip it.")
                 log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
@@ -45,7 +46,7 @@ class ContentChecker:
             log.warning(f"Unable to fetch releases from {artur.name}. Going to skip it.")
             log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
 
-    def send_notification_if_needed(self, team, release_code, release_message, artur_flag=False):
+    def send_notification_if_needed(self, team, release_code, release_message, release_url=None, artur_flag=False):
         file_dir = f"{DROPBOX_BOT_DIR_PATH}/{team.name}"
         try:
             if self._is_old_content(file_dir, release_code):
