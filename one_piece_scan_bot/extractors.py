@@ -33,7 +33,10 @@ def jjt_fetch():
         releases = [f"One Piece {ch} (ITA)" for ch in chapter_numbers]
         messages = [f"{r}\n{reader_url.format(ch_num)}" for r, ch_num in zip(releases, chapter_numbers)]
         log.info(releases)
-        return releases, messages
+        return {
+            'releases': releases,
+            'messages': messages,
+        }
     except Exception as exc:
         log.warning("Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
         log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
@@ -79,7 +82,10 @@ def mangaeden_fetch():
             releases.append(f"One Piece {chapter_num} (ITA)")
             messages.append(releases[-1] + "\n" + base_url.format(chap_url))
         log.info(releases)
-        return releases, messages
+        return {
+            'releases': releases,
+            'messages': messages,
+        }
     except Exception as exc:
         log.warning("Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
         log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
@@ -105,7 +111,10 @@ def lupi_fetch():
             releases.append(f"One Piece {chapter_num} (ITA)")
             messages.append(releases[-1] + "\n" + f"{base_url}{chapter_num}/page/1")
         log.info(releases)
-        return releases, messages
+        return {
+            'releases': releases,
+            'messages': messages,
+        }
     except Exception as exc:
         log.warning(
             "Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
@@ -128,11 +137,16 @@ def shueisha_fetch():
         clean_text = ''.join(chr(ch) for ch in raw_text if chr(ch) in string.printable)
         releases = re.findall("#(\d+)", clean_text)[-3:]
         chapter_ids = re.findall("chapter/(\d+)/chapter_thumbnail", clean_text)[-3:]
-        reader_url = "https://mangaplus.shueisha.co.jp/viewer/{}"
+        reader_url_template = "https://mangaplus.shueisha.co.jp/viewer/{}"
+        reader_urls = [reader_url_template.format(ch_id) for ch_id in chapter_ids]
         releases = ["One Piece " + r + " (ENG)" for r in releases]
-        messages = [r + "\n" + reader_url.format(ch_id) for r, ch_id in zip(releases, chapter_ids)]
+        messages = [r + "\n" + reader_url for r, reader_url in zip(releases, reader_urls)]
         log.info(releases)
-        return releases, messages
+        return {
+            'releases': releases,
+            'messages': messages,
+            'urls': reader_urls,
+        }
     except Exception as exc:
         log.warning("Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
         log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
@@ -157,7 +171,10 @@ def artur_fetch():
             releases.append(article_name + " (ENG)")
             messages.append(releases[-1] + "\n" + article_url)
         log.info(releases)
-        return releases, messages
+        return {
+            'releases': releases,
+            'messages': messages,
+        }
     except Exception as exc:
         log.warning("Unable to fetch data.\nPlease check your Internet connection and the availability of the site.")
         log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")

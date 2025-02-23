@@ -22,7 +22,9 @@ class ContentChecker:
         for team in teams:
             log.info(f"Fetching releases from {team.name}...")
             try:
-                releases, messages = team.fetch_f()
+                fetched_content = team.fetch_f()
+                releases = fetched_content['releases']
+                messages = fetched_content['messages']
                 for release, message in zip(releases, messages):
                     if is_monitored(message):
                         self.send_notification_if_needed(team, release, message)
@@ -34,7 +36,9 @@ class ContentChecker:
         log.info(f"Checking The Library of Ohara at {str(time.strftime('%c'))}")
         log.info(f"Fetching releases from {artur.name}...")
         try:
-            releases, messages = artur.fetch_f()
+            fetched_content = artur.fetch_f()
+            releases = fetched_content['releases']
+            messages = fetched_content['messages']
             for release, message in zip(releases, messages):
                 self.send_notification_if_needed(artur, release, message, artur_flag=True)
         except Exception as exc:
