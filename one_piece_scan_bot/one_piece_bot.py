@@ -6,6 +6,7 @@ from one_piece_scan_bot.dropbox_service import DropboxService
 from one_piece_scan_bot.extractors import teams, artur
 from one_piece_scan_bot.logger import get_application_logger
 from one_piece_scan_bot.credentials import OP_BOT_TOKEN, TELEGRAM_CHAT_ID
+from one_piece_scan_bot.docbuilder import Document
 
 log = get_application_logger()
 releases_to_check = ['One Piece']
@@ -60,6 +61,17 @@ class ContentChecker:
                 message += f"\n\n{team.name}: {release_message}\n\nBuona lettura!"
                 self.storage_service.create_file(f"{file_dir}/{release_code}")
                 op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
+                if release_url is not None:
+                    doc = Document(release_url, document_type='pdf')
+                    doc.build_from_url()
+                    # self.storage_service.create_file(f"{file_dir}/{release_code}_pdf")
+                    # op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
+
+                    doc.set_type('epub')
+                    doc.build_from_url()
+                    # self.storage_service.create_file(f"{file_dir}/{release_code}_epub")
+                    # op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
+
             except Exception as exc:
                 log.warning("Unable to send Telegram notification.")
                 log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
