@@ -9,6 +9,7 @@ class Document:
             'pdf',
             'epub',
         }
+        self.images = None
         self.set_url(source_url)
         self.set_type(document_type)
     
@@ -32,11 +33,14 @@ class Document:
 
     def build_from_url(self):
         if self._is_supported_type(self.type):
+            page = Mangapage(self.source_url)
+            self.images = page.fetch_images("temp_images")
+
             print(f"Generating {self.type} document from {self.source_url}...")
             if self.type == 'pdf':
-                pass
+                self._generate_pdf()
             elif self.type == 'epub':
-                pass
+                self._generate_epub()
         else:
             print(f"Unsupported type for the {self.__class__.__name__} class, no documents will be generated")
 
@@ -44,11 +48,13 @@ class Document:
         return type in self.supported_types
     
     def _generate_pdf(self):
-        # TODO implement
+        # TODO merge self.images into a single PDF file
         print(f"Generated PDF file!")
+        # TODO delete the temporary folder with the images
         pass
 
     def _generate_epub(self):
-        # TODO implement
+        # TODO merge self.images into a single EPUB file - please consider that mloader can download directly in CBZ format!
         print(f"Generated EPUB file!")
+        # TODO delete the temporary folder with the images
         pass
