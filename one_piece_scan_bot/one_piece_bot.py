@@ -1,6 +1,7 @@
 import telegram
 import time
 import re
+import os
 
 from one_piece_scan_bot.constants import DROPBOX_BOT_DIR_PATH
 from one_piece_scan_bot.dropbox_service import DropboxService
@@ -72,13 +73,17 @@ class ContentChecker:
                         output_dir='output_docs',
                         document_type='pdf')
                     doc_pdf = doc.build_from_url()
-                    # self.storage_service.create_file(f"{file_dir}/{release_code}_pdf")
-                    # op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
+                    doc_pdf_name = os.path.basename(doc_pdf)
+                    self.storage_service.create_file(f"{file_dir}/{release_code}/{doc_pdf_name}") # TODO upload actual file
+                    message_pdf = f"Generated manga {doc_pdf_name} now available! ARRRWWW!" # TODO insert link in the message
+                    op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message_pdf, disable_web_page_preview=True)
 
                     doc.set_type('epub')
                     doc_epub = doc.build_from_url()
-                    # self.storage_service.create_file(f"{file_dir}/{release_code}_epub")
-                    # op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
+                    doc_epub_name = os.path.basename(doc_epub)
+                    self.storage_service.create_file(f"{file_dir}/{release_code}/{doc_epub_name}") # TODO upload actual file
+                    message_epub = f"Generated manga {doc_epub_name} now available! ARRRWWW!" # TODO insert link in the message
+                    op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message_epub, disable_web_page_preview=True)
                     doc.clean_working_dir()
 
             except Exception as exc:
