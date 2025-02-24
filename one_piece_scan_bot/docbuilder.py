@@ -1,7 +1,14 @@
+import os
 from one_piece_scan_bot.pages_downloader import Mangapage
+from kcc.kindlecomicconverter import comic2ebook
 
 class Document:
-    def __init__(self, source_url: str = None, document_type: str = 'pdf'):
+    def __init__(
+            self,
+            name: str = None,
+            source_url: str = None,
+            output_dir: str = None,
+            document_type: str = 'pdf'):
         self.name = None
         self.source_url = None
         self.type = None
@@ -9,9 +16,12 @@ class Document:
             'pdf',
             'epub',
         }
+        self.output_dir = None
         self.images = None
+        self.set_name(name)
         self.set_url(source_url)
         self.set_type(document_type)
+        self.set_output_dir(output_dir)
     
     def set_url(self, url: str) -> None:
         if url is None or not Mangapage.is_valid_url(url):
@@ -25,8 +35,17 @@ class Document:
         else:
             print(f"Type {document_type} not supported for the {self.__class__.__name__} class!")
 
-    def get_name(self):
-        return self.name
+    def set_output_dir(self, output_dir: str):
+        if output_dir is None:
+            print("Invalid output directory specified!")
+            return
+        self.output_dir = output_dir
+
+    def set_name(self, name: str):
+        if name is None:
+            print("Invalid name for the manga!")
+            return
+        self.name = name
     
     def get_supported_types(self):
         return self.supported_types
@@ -34,13 +53,14 @@ class Document:
     def build_from_url(self):
         if self._is_supported_type(self.type):
             page = Mangapage(self.source_url)
-            self.images = page.fetch_images("temp_images")
+            self.images = page.fetch_images(self.output_dir)
 
             print(f"Generating {self.type} document from {self.source_url}...")
             if self.type == 'pdf':
                 self._generate_pdf()
             elif self.type == 'epub':
                 self._generate_epub()
+            # TODO delete the temporary folder with the images
         else:
             print(f"Unsupported type for the {self.__class__.__name__} class, no documents will be generated")
 
@@ -50,11 +70,67 @@ class Document:
     def _generate_pdf(self):
         # TODO merge self.images into a single PDF file
         print(f"Generated PDF file!")
-        # TODO delete the temporary folder with the images
         pass
 
     def _generate_epub(self):
-        # TODO merge self.images into a single EPUB file - please consider that mloader can download directly in CBZ format!
-        print(f"Generated EPUB file!")
-        # TODO delete the temporary folder with the images
+        input_folder_images = self._get_common_path_images()
+        comic2ebook.main([
+            '--manga-style',
+            '--upscale',
+            '--profile', 'KoCC', # Kobo Clara Colour, Gabriele's manga machine
+            '--format', 'EPUB',
+            '--uspcale',
+            '--splitter', '2', # rotate
+            '--output', self.output_dir,
+            input_folder_images,
+            ])
+        
+        epub_generated = self._get_file_names_with_extension(self.output_dir, '.epub', first_file_only=True)
+        epub_newname = self._new_epub_name(epub_generated)
+        os.rename(
+            epub_generated,
+            epub_newname
+        )
+        print(f"Generated EPUB file: {epub_newname}")
         pass
+
+    def _get_common_path_images(self):
+        return os.path.commonpath(self.images)
+    
+    def _get_file_names_with_extension(
+            self,
+            folder: str,
+            extension: str,
+            first_file_only: False):
+        files_with_extension = []
+        if not os.path.exists(folder):
+            print(f"Invalid folder where to search files: {folder}")
+        else:
+            for file in os.listdir(folder):
+                if file.endswith(extension):
+                    full_file_path = os.path.abspath(os.path.join(folder, file))
+                    if first_file_only:
+                        return full_file_path
+                    else:
+                        files_with_extension.append(full_file_path)
+        return files_with_extension
+    
+    def _new_epub_name(self, old_epub_name: str):
+        doc_name = "MANGANAME" if self.name is None else self.name
+        chapter_number = Mangapage.get_chapter_number(self.source_url)
+        extensions = self._extract_extensions(old_epub_name)
+        return os.path.abspath(os.path.join(
+            self.output_dir,
+            doc_name + "_" + str(chapter_number) + "".join(extensions),
+        ))
+    
+    @staticmethod
+    def _extract_extensions(filename: str):
+        extensions = []
+        while True:
+            filename, ext = os.path.splitext(filename)
+            if not ext:
+                break
+            extensions.append(ext)
+        
+        return [s for s in reversed(extensions)]

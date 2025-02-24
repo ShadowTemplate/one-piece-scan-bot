@@ -62,7 +62,11 @@ class ContentChecker:
                 self.storage_service.create_file(f"{file_dir}/{release_code}")
                 op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
                 if release_url is not None:
-                    doc = Document(release_url, document_type='pdf')
+                    doc = Document(
+                        name="One_Piece",
+                        source_url=release_url,
+                        output_dir='temp_images',
+                        document_type='pdf')
                     doc.build_from_url()
                     # self.storage_service.create_file(f"{file_dir}/{release_code}_pdf")
                     # op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
