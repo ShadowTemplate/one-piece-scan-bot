@@ -1,4 +1,5 @@
 import os
+import shutil
 from PIL import Image
 from one_piece_scan_bot.pages_downloader import Mangapage
 from kcc.kindlecomicconverter import comic2ebook
@@ -9,7 +10,9 @@ class Document:
             name: str = None,
             source_url: str = None,
             output_dir: str = None,
-            document_type: str = 'pdf'):
+            working_dir: str = None,
+            document_type: str = 'pdf'
+            ):
         self.name = None
         self.source_url = None
         self.type = None
@@ -18,11 +21,13 @@ class Document:
             'epub',
         }
         self.output_dir = None
+        self.working_dir = None
         self.images = None
         self.set_name(name)
         self.set_url(source_url)
         self.set_type(document_type)
         self.set_output_dir(output_dir)
+        self.set_working_dir(working_dir)
     
     def set_url(self, url: str) -> None:
         if url is None or not Mangapage.is_valid_url(url):
@@ -40,7 +45,18 @@ class Document:
         if output_dir is None:
             print("Invalid output directory specified!")
             return
-        self.output_dir = output_dir
+        self.output_dir =os.path.abspath(output_dir)
+
+        if not os.path.exists(self.output_dir):
+            os.makedirs(self.output_dir)
+
+    def set_working_dir(self, working_dir: str):
+        if working_dir is None:
+            self.working_dir = os.path.abspath(os.path.join(os.getcwd(), "temp"))
+            print(f"Working directory not specified, using {self.working_dir} ...")
+        
+        if not os.path.exists(self.working_dir):
+            os.makedirs(self.working_dir)
 
     def set_name(self, name: str):
         if name is None:
@@ -54,16 +70,21 @@ class Document:
     def build_from_url(self):
         if self._is_supported_type(self.type):
             page = Mangapage(self.source_url)
-            self.images = page.fetch_images(self.output_dir)
+            self.images = page.fetch_images(self.working_dir)
 
             print(f"Generating {self.type} document from {self.source_url}...")
             if self.type == 'pdf':
                 self._generate_pdf()
             elif self.type == 'epub':
                 self._generate_epub()
-            # TODO delete the temporary folder with the images
+            print(f"{self.type.upper()} document generation concluded!")
         else:
             print(f"Unsupported type for the {self.__class__.__name__} class, no documents will be generated")
+
+    def clean_working_dir(self):
+        print(f"Cleaning working directory {self.working_dir}...")
+        shutil.rmtree(self.working_dir)
+        print(f"Working directory {self.working_dir} cleaned!")
 
     def _is_supported_type(self, type: str) -> bool:
         return type in self.supported_types
@@ -99,7 +120,6 @@ class Document:
             '--upscale',
             '--profile', 'KoCC', # Kobo Clara Colour, Gabriele's manga machine
             '--format', 'EPUB',
-            '--uspcale',
             '--splitter', '2', # rotate
             '--output', self.output_dir,
             input_folder_images,

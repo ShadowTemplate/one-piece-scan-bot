@@ -65,7 +65,7 @@ class ContentChecker:
                     doc = Document(
                         name="One_Piece",
                         source_url=release_url,
-                        output_dir='temp_images',
+                        output_dir='output_docs',
                         document_type='pdf')
                     doc.build_from_url()
                     # self.storage_service.create_file(f"{file_dir}/{release_code}_pdf")
@@ -75,6 +75,7 @@ class ContentChecker:
                     doc.build_from_url()
                     # self.storage_service.create_file(f"{file_dir}/{release_code}_epub")
                     # op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
+                    doc.clean_working_dir()
 
             except Exception as exc:
                 log.warning("Unable to send Telegram notification.")
