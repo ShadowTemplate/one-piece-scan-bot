@@ -28,7 +28,7 @@ class Mangapage:
         output_folder = os.getcwd() if output_folder is None else output_folder
         if self._is_mangaplus_url(self.url):
             mloader = MloaderWrapper(output_directory=output_folder)
-            chapter_number = self.get_chapter_number(self.url)
+            chapter_number = self.get_chapter_id(self.url)
             self.images = mloader.download_chapters(chapter_number)
         else:
             # fallback to normal webpage scraping
@@ -68,7 +68,7 @@ class Mangapage:
         return response
     
     @staticmethod
-    def get_chapter_number(url: str):
+    def get_chapter_id(url: str):
         # TODO intelligent search for non-Mangaplus urls
         url_split = url.split('/')
         return int(url_split[-1])

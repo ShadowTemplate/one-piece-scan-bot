@@ -7,6 +7,7 @@ from kcc.kindlecomicconverter import comic2ebook
 class Document:
     def __init__(
             self,
+            chapter_nunber: int,
             name: str = None,
             source_url: str = None,
             output_dir: str = None,
@@ -22,6 +23,7 @@ class Document:
         }
         self.output_dir = None
         self.working_dir = None
+        self.chapter_number = str(chapter_nunber)
         self.images = None
         self.set_name(name)
         self.set_url(source_url)
@@ -135,10 +137,9 @@ class Document:
 
     def _new_pdf_name(self):
         doc_name = "MANGANAME" if self.name is None else self.name
-        chapter_number = Mangapage.get_chapter_number(self.source_url)
         return os.path.abspath(os.path.join(
             self.output_dir,
-            doc_name + "_" + str(chapter_number) + ".pdf"
+            doc_name + ".pdf"
         ))
 
     def _get_common_path_images(self):
@@ -164,11 +165,10 @@ class Document:
     
     def _new_epub_name(self, old_epub_name: str):
         doc_name = "MANGANAME" if self.name is None else self.name
-        chapter_number = Mangapage.get_chapter_number(self.source_url)
         extensions = self._extract_extensions(old_epub_name)
         return os.path.abspath(os.path.join(
             self.output_dir,
-            doc_name + "_" + str(chapter_number) + "".join(extensions),
+            doc_name + "".join(extensions),
         ))
     
     @staticmethod

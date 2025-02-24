@@ -1,5 +1,6 @@
 import telegram
 import time
+import re
 
 from one_piece_scan_bot.constants import DROPBOX_BOT_DIR_PATH
 from one_piece_scan_bot.dropbox_service import DropboxService
@@ -62,8 +63,11 @@ class ContentChecker:
                 self.storage_service.create_file(f"{file_dir}/{release_code}")
                 op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
                 if release_url is not None:
+                    chapter_title = release_message.split('\n')[0]
+                    chapter_number = re.search(r'\d+', chapter_title).group()
                     doc = Document(
-                        name="One_Piece",
+                        chapter_nunber=chapter_number,
+                        name=chapter_title,
                         source_url=release_url,
                         output_dir='output_docs',
                         document_type='pdf')
