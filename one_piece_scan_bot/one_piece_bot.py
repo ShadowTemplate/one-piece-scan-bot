@@ -71,12 +71,12 @@ class ContentChecker:
                         source_url=release_url,
                         output_dir='output_docs',
                         document_type='pdf')
-                    doc.build_from_url()
+                    doc_pdf = doc.build_from_url()
                     # self.storage_service.create_file(f"{file_dir}/{release_code}_pdf")
                     # op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
 
                     doc.set_type('epub')
-                    doc.build_from_url()
+                    doc_epub = doc.build_from_url()
                     # self.storage_service.create_file(f"{file_dir}/{release_code}_epub")
                     # op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
                     doc.clean_working_dir()

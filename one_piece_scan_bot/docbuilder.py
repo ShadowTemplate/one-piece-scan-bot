@@ -76,12 +76,14 @@ class Document:
 
             print(f"Generating {self.type} document from {self.source_url}...")
             if self.type == 'pdf':
-                self._generate_pdf()
+                generated_doc = self._generate_pdf()
             elif self.type == 'epub':
-                self._generate_epub()
-            print(f"{self.type.upper()} document generation concluded!")
+                generated_doc = self._generate_epub()
+            print(f"{self.type.upper()} document generation concluded: created file is {generated_doc}!")
+            return generated_doc
         else:
             print(f"Unsupported type for the {self.__class__.__name__} class, no documents will be generated")
+            return None
 
     def clean_working_dir(self):
         print(f"Cleaning working directory {self.working_dir}...")
@@ -112,8 +114,10 @@ class Document:
                 resolution=100.0,
             )
             print(f"Generated PDF file: {pdf_name}")
+            return pdf_name
         else:
             print("No images available to generate the PDF!")
+            return ''
 
     def _generate_epub(self):
         input_folder_images = self._get_common_path_images()
@@ -134,6 +138,7 @@ class Document:
             epub_newname
         )
         print(f"Generated EPUB file: {epub_newname}")
+        return epub_newname
 
     def _new_pdf_name(self):
         doc_name = "MANGANAME" if self.name is None else self.name
