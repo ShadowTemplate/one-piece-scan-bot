@@ -1,4 +1,5 @@
 import os
+from PIL import Image
 from one_piece_scan_bot.pages_downloader import Mangapage
 from kcc.kindlecomicconverter import comic2ebook
 
@@ -68,9 +69,28 @@ class Document:
         return type in self.supported_types
     
     def _generate_pdf(self):
-        # TODO merge self.images into a single PDF file
-        print(f"Generated PDF file!")
-        pass
+        images = []
+        self.images.sort() # assuming naming convention in increasing order for pages
+        for img_path in self.images:
+            try:
+                img = Image.open(img_path)
+                if img.mode in ('RGBA', 'P'):
+                    img = img.convert('RGB')
+                images.append(img)
+            except Exception as exc:
+                print(f"Skipping {img_path} with exception: {exc}")
+        
+        if images:
+            pdf_name = self._new_pdf_name()
+            images[0].save(
+                pdf_name,
+                save_all = True,
+                append_images=images[1:],
+                resolution=100.0,
+            )
+            print(f"Generated PDF file: {pdf_name}")
+        else:
+            print("No images available to generate the PDF!")
 
     def _generate_epub(self):
         input_folder_images = self._get_common_path_images()
@@ -92,7 +112,14 @@ class Document:
             epub_newname
         )
         print(f"Generated EPUB file: {epub_newname}")
-        pass
+
+    def _new_pdf_name(self):
+        doc_name = "MANGANAME" if self.name is None else self.name
+        chapter_number = Mangapage.get_chapter_number(self.source_url)
+        return os.path.abspath(os.path.join(
+            self.output_dir,
+            doc_name + "_" + str(chapter_number) + ".pdf"
+        ))
 
     def _get_common_path_images(self):
         return os.path.commonpath(self.images)
