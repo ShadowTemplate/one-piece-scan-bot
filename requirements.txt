@@ -1,10 +1,4 @@
-# one-piece-scan-bot
-pyquery==1.2.13
-python-telegram-bot==8.1.1
-urlfetch==1.1.3
-dropbox==11.36.2
-selenium==3.141.0
-
-# heroku-flask
-gunicorn==20.0.4
-flask==1.1.2
+pyquery==2.0.1
+python-telegram-bot==22.1
+urlfetch==2.0.1
+dropbox==12.0.2
