@@ -75,6 +75,22 @@ class ContentChecker:
                         op_bot.sendDocument(
                             chat_id=TELEGRAM_CHAT_ID,
                             document=open(file_to_upload, 'rb'),
+                            caption="PDF",
+                        )
+                        doc.set_type('epub')
+                        doc.set_kcc_option('--profile', 'KoCC')
+                        doc_pdf = doc.build_from_url()
+                        op_bot.sendDocument(
+                            chat_id=TELEGRAM_CHAT_ID,
+                            document=open(doc_pdf, 'rb'),
+                            caption="KoCC",
+                        )
+                        doc.set_kcc_option('--profile', 'OBC')
+                        doc_pdf = doc.build_from_url()
+                        op_bot.sendDocument(
+                            chat_id=TELEGRAM_CHAT_ID,
+                            document=open(doc_pdf, 'rb'),
+                            caption="OBC",
                         )
                 except Exception as exc:
                     log.warning("Unable to download and send Telegram chapter.")
