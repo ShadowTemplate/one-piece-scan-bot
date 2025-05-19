@@ -1,5 +1,6 @@
 import asyncio
 import telegram
+from telegram.request import HTTPXRequest
 import time
 
 from one_piece_scan_bot.constants import DROPBOX_BOT_DIR_PATH
@@ -49,7 +50,10 @@ class ContentChecker:
             if self._is_old_content(file_dir, release_code):
                 return
             try:
-                op_bot = telegram.Bot(token=OP_BOT_TOKEN)
+                op_bot = telegram.Bot(
+                    token=OP_BOT_TOKEN,
+                    request=HTTPXRequest(connection_pool_size=20)
+                )
                 if artur_flag:
                     message = "Hey, pirati! Nuova analisi disponibile!"
                 else:
