@@ -1,5 +1,6 @@
 name: Check releases every 60 minutes
 on:
+  push:
   schedule:
     - cron: "0 * * * *"
 jobs:
