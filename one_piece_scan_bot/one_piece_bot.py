@@ -56,7 +56,13 @@ class ContentChecker:
                     message = "Hey, pirati! Nuovo capitolo disponibile!"
                 message += f"\n\n{team.name}: {release_message}\n\nBuona lettura!"
                 self.storage_service.create_file(f"{file_dir}/{release_code}")
-                op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
+                async def async_send(msg):
+                    await op_bot.sendMessage(
+                        chat_id=TELEGRAM_CHAT_ID,
+                        text=msg,
+                        disable_web_page_preview=True,
+                    )
+                asyncio.run(async_send(message))
                 try:
                     if team.name == "Shueisha":
                         chapter_title, url = release_message.split("\n")
@@ -79,11 +85,7 @@ class ContentChecker:
                 except Exception as exc:
                     log.warning("Unable to download and send Telegram chapter.")
                     log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
-                    op_bot.sendMessage(
-                        chat_id=TELEGRAM_CHAT_ID,
-                        text="Hey, pirati! La Marina ha sequestrato il capitolo: niente PDF questa settimana! ARRRWWW!",
-                        disable_web_page_preview=True
-                    )
+                    asyncio.run(async_send("Hey, pirati! La Marina ha sequestrato il capitolo: niente PDF questa settimana! ARRRWWW!"))
             except Exception as exc:
                 log.warning("Unable to send Telegram notification.")
                 log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
