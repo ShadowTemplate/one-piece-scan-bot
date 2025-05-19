@@ -75,7 +75,6 @@ class ContentChecker:
                         op_bot.sendDocument(
                             chat_id=TELEGRAM_CHAT_ID,
                             document=open(file_to_upload, 'rb'),
-                            caption=f"For {doc.get_device_name()}.",
                         )
                 except Exception as exc:
                     log.warning("Unable to download and send Telegram chapter.")
