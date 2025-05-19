@@ -1,3 +1,4 @@
+import asyncio
 import telegram
 import time
 
@@ -6,6 +7,7 @@ from one_piece_scan_bot.dropbox_service import DropboxService
 from one_piece_scan_bot.extractors import teams, artur
 from one_piece_scan_bot.logger import get_application_logger
 from one_piece_scan_bot.credentials import OP_BOT_TOKEN, TELEGRAM_CHAT_ID
+from lib.manganloader.manganloader.docbuilder import Document
 
 log = get_application_logger()
 releases_to_check = ['One Piece']
@@ -55,6 +57,33 @@ class ContentChecker:
                 message += f"\n\n{team.name}: {release_message}\n\nBuona lettura!"
                 self.storage_service.create_file(f"{file_dir}/{release_code}")
                 op_bot.sendMessage(chat_id=TELEGRAM_CHAT_ID, text=message, disable_web_page_preview=True)
+                try:
+                    if team.name == "Shueisha":
+                        chapter_title, url = release_message.split("\n")
+                        doc = Document(
+                            name=chapter_title,
+                            source_url=url,
+                            output_dir="/tmp/downloaded_chapters",
+                            working_dir="/tmp/",
+                            document_type='pdf')
+                        doc.set_double_spread_version(want_double_spread_version=True)
+                        doc_pdf = doc.build_from_url()
+                        file_to_upload = doc_pdf.replace(".pdf", " double-spread.pdf")
+                        async def async_upload():
+                            await op_bot.sendDocument(
+                                chat_id=TELEGRAM_CHAT_ID,
+                                document=open(file_to_upload, 'rb'),
+                                caption=f"For {doc.get_device_name()}.",
+                            )
+                        asyncio.run(async_upload())
+                except Exception as exc:
+                    log.warning("Unable to download and send Telegram chapter.")
+                    log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
+                    op_bot.sendMessage(
+                        chat_id=TELEGRAM_CHAT_ID,
+                        text="Hey, pirati! La Marina ha sequestrato il capitolo: niente PDF questa settimana! ARRRWWW!",
+                        disable_web_page_preview=True
+                    )
             except Exception as exc:
                 log.warning("Unable to send Telegram notification.")
                 log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
