@@ -2,6 +2,7 @@ import urlfetch
 from pyquery import PyQuery
 import re
 import string
+import uuid
 
 from one_piece_scan_bot.logger import get_application_logger
 
@@ -38,13 +39,15 @@ def jjt_fetch():
 
 
 def shueisha_fetch():
-    # OP ENG has id 100020
-    # web page: https://mangaplus.shueisha.co.jp/titles/100020
+    # OP ENG title 100020: https://mangaplus.shueisha.co.jp/titles/100020
+    # SESSION-TOKEN is required (any UUID); without it the API returns "Account Banned"
     url = "https://jumpg-webapi.tokyo-cdn.com/api/title_detailV3?title_id=100020"
     headers = {
         "User-Agent":
             "Mozilla/5.0 (X11; Linux i686) AppleWebKit/537.17 (KHTML, like "
-            "Gecko) Chrome/24.0.1312.27 Safari/537.17"}
+            "Gecko) Chrome/24.0.1312.27 Safari/537.17",
+        "SESSION-TOKEN": str(uuid.uuid4()),
+    }
     try:
         request = urlfetch.fetch(url, headers=headers)
         raw_text = request.content
