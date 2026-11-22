@@ -27,7 +27,7 @@ def jjt_fetch():
         parser = PyQuery(request.content)
         releases = [r.attrib.get("title") for r in parser("a") if "One Piece" in r.attrib.get("title")]
         reader_url = "https://www.juinjutsureader.ovh/read/one-piece/it/0/{}/"
-        chapter_numbers = [re.findall("(\d+)", r)[0] for r in releases]
+        chapter_numbers = [re.findall(r"(\d+)", r)[0] for r in releases]
         releases = [f"One Piece {ch} (ITA)" for ch in chapter_numbers]
         messages = [f"{r}\n{reader_url.format(ch_num)}" for r, ch_num in zip(releases, chapter_numbers)]
         log.info(releases)
@@ -52,8 +52,8 @@ def shueisha_fetch():
         request = urlfetch.fetch(url, headers=headers)
         raw_text = request.content
         clean_text = ''.join(chr(ch) for ch in raw_text if chr(ch) in string.printable)
-        releases = re.findall("#(\d+)", clean_text)[-3:]
-        chapter_ids = re.findall("chapter/(\d+)/chapter_thumbnail", clean_text)[-3:]
+        releases = re.findall(r"#(\d+)", clean_text)[-3:]
+        chapter_ids = re.findall(r"chapter/(\d+)/chapter_thumbnail", clean_text)[-3:]
         reader_url = "https://mangaplus.shueisha.co.jp/viewer/{}"
         releases = ["One Piece " + r + " (ENG)" for r in releases]
         messages = [r + "\n" + reader_url.format(ch_id) for r, ch_id in zip(releases, chapter_ids)]

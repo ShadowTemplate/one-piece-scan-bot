@@ -1,11 +1,13 @@
 import telegram
 import time
+import traceback
 
 from one_piece_scan_bot.constants import DROPBOX_BOT_DIR_PATH
 from one_piece_scan_bot.dropbox_service import DropboxService
 from one_piece_scan_bot.extractors import teams, artur
 from one_piece_scan_bot.logger import get_application_logger
 from one_piece_scan_bot.credentials import OP_BOT_TOKEN, TELEGRAM_CHAT_ID
+import one_piece_scan_bot.mloader_patch  # noqa: F401 (must be imported before the Document is used)
 from lib.manganloader.manganloader.docbuilder import Document
 
 log = get_application_logger()
@@ -94,6 +96,7 @@ class ContentChecker:
                         )
                 except Exception as exc:
                     log.warning("Unable to download and send Telegram chapter.")
+                    log.warning(traceback.format_exc())
                     log.warning(f"Okay, pirate, we've had a problem here.\n{type(exc).__name__}: {str(exc)}")
                     op_bot.sendMessage(
                         chat_id=TELEGRAM_CHAT_ID,
